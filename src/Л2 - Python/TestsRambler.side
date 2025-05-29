@@ -1,0 +1,137 @@
+{
+  "version": "3.0",
+  "url": "https://www.rambler.ru/",
+  "tests": [
+    {
+      "name": "Test 1: Обычный запрос",
+      "commands": [
+        {
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query']",
+          "value": "погода в Сочи"
+        },
+        {
+          "command": "click",
+          "target": "xpath=//form[@role='search']/button[contains(@aria-label, 'Найти')]",
+          "value": ""
+        },
+        {
+          "command": "assertElementPresent",
+          "target": "xpath=//a[contains(text(),'Погода в Сочи')]"
+        }
+      ]
+    },
+    {
+      "name": "Test 2: Очень длинный запрос",
+      "commands": [
+        {
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "executeScript",
+          "target": "return 'a'.repeat(5000)",
+          "value": "generatedString"
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query']",
+          "value": "${generatedString}"
+        },
+        {
+          "command": "click",
+          "target": "xpath=//div[@id='app']//button[@type='submit']"
+        },
+        {
+          "command": "assertElementPresent",
+          "target": "css=.Error"
+        }
+      ]
+    },
+    {
+      "name": "Test 3: XSS",
+      "commands": [
+        {
+          "command": "open",
+          "target": "/"
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query']",
+          "value": "<img src=x onerror=alert(1)>"
+        },
+        {
+          "command": "click",
+          "target": "xpath=//div[@id='app']//button[@type='submit']"
+        },
+        {
+          "command": "assertAlert",
+          "target": "contains(*,'угроза')"
+        }
+      ]
+    },
+    {
+      "name": "Test 4: Пустой запрос",
+      "commands": [
+        {
+          "command": "open",
+          "target": "/"
+        },
+        {
+          "command": "click",
+          "target": "css=input[name='query']"
+        },
+        {
+          "command": "click",
+          "target": "xpath=//div[@id='app']//button[@type='submit']"
+        },
+        {
+          "command": "assertText",
+          "target": "css=.Error",
+          "value": "Задан пустой поисковый запрос"
+        }
+      ]
+    },
+    {
+      "name": "Test 6: Регистр символов",
+      "commands": [
+        {
+          "command": "open",
+          "target": "/"
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query']",
+          "value": "ПОГОДА В СОЧИ"
+        },
+        {
+          "command": "click",
+          "target": "xpath=//form[@role='search']/button[contains(@aria-label, 'Найти')]"
+        },
+        {
+          "command": "assertValue",
+          "target": "css=input[name='query']",
+          "value": "погода в Сочи"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "name": "Основной набор",
+      "tests": [
+        "Test 1: Обычный запрос",
+        "Test 2: Очень длинный запрос",
+        "Test 3: XSS",
+        "Test 5: Пустой запрос",
+        "Test 6: Регистр символов"
+      ]
+    }
+  ]
+}

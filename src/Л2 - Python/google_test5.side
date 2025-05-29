@@ -1,0 +1,34 @@
+{
+  "version": "3.0",
+  "url": "https://www.google.com",
+  "tests": [{
+    "name": "Проверка поисковых подсказок",
+    "commands": [
+      {
+        "command": "type",
+        "target": "name=q",
+        "value": "погода в"
+      },
+      {
+        "command": "waitForElementVisible",
+        "target": "css=.sbct:first-child",
+        "value": "5000"
+      },
+      {
+        "command": "assertText",
+        "target": "css=.sbct:first-child",
+        "value": "regexp:^погода в"
+      },
+      {
+        "command": "storeText",
+        "target": "css=.sbct:first-child",
+        "value": "suggestionText"
+      },
+      {
+        "command": "executeScript",
+        "target": "return ${suggestionText}.toLowerCase().includes('погода в')",
+        "value": "true"
+      }
+    ]
+  }]
+}

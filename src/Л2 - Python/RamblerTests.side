@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "Кейс 1: Стандартный поиск",
+      "commands": [
+        { "command": "open", "target": "https://www.rambler.ru/" },
+        { "command": "type", "target": "id=search-input", "value": "погода в Сочи" },
+        { "command": "click", "target": "css=.search-button" },
+        { "command": "assertElementPresent", "target": "xpath=//div[contains(text(),'Результаты поиска')]" }
+      ]
+    },
+    {
+      "name": "Кейс 2: Макс. длина ввода",
+      "commands": [
+        { "command": "store", "target": "255", "value": "maxLength" },
+        { "command": "type", "target": "id=search-input", "value": "${'a'.repeat(maxLength)}" },
+        { "command": "assertElementPresent", "target": "css=.input-valid" }
+      ]
+    },
+    {
+      "name": "Кейс 3: XSS-инъекция",
+      "commands": [
+        { "command": "type", "target": "id=search-input", "value": "<script>alert(1)</script>" },
+        { "command": "click", "target": "css=.search-button" },
+        { "command": "assertAlert", "target": "Обнаружена угроза безопасности" }
+      ]
+    },
+    {
+      "name": "Кейс 4: Пустое поле",
+      "commands": [
+        { "command": "click", "target": "css=.search-button" },
+        { "command": "assertCss", "target": "id=search-input", "value": "border-color: rgb(255, 0, 0)" }
+      ]
+    },
+    {
+      "name": "Кейс 5: Автодополнение",
+      "commands": [
+        { "command": "type", "target": "id=search-input", "value": "нов" },
+        { "command": "pause", "target": "2000" },
+        { "command": "assertElementCount", "target": "css=.suggestion-item", "value": "3" }
+      ]
+    }
+  ]
+}
